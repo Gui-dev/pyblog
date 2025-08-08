@@ -15,7 +15,7 @@ def get_user_repository(db: Session = Depends(get_db)) -> UserRepository:
 	return UserRepository(db)
 
 
-@router.post('/login', response_model=Token)
+@router.post('/token', response_model=Token)
 async def login(
 	form_data: OAuth2PasswordRequestForm = Depends(),
 	repository: UserRepository = Depends(get_user_repository)):
