@@ -98,12 +98,25 @@ def update_post(post_id: int, post_update: PostUpdate, current_user: User = Depe
 
 
 @router.delete('/post_id', status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(post_id: int, post_repository: PostRepository = Depends(get_post_repository)):
+def delete_post(
+	post_id: int,
+	current_user: User = Depends(get_current_user),
+	post_repository: PostRepository = Depends(get_post_repository)
+):
 	"""Deleta um post específico pelo ID"""
-	db_post = post_repository.delete_post(post_id=post_id)
+	db_post = post_repository.get_post_by_id(post_id)
 	
 	if db_post is None:
 		raise HTTPException(status_code=404, detail='Post not found')
+	
+	if db_post.owner_id != current_user.id:
+		raise HTTPException(
+			status_code=status.HTTP_403_FORBIDDEN,
+			detail='You are not authorized to update this post'
+		)
+		
+	
+	post_repository.delete_post(post_id)
 	
 	return
 
