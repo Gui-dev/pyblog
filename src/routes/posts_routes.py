@@ -8,7 +8,7 @@ from jose import jwt, JWTError
 from src.database.database import Base, engine, SessionLocal
 from src.repositories.post import PostRepository
 from src.repositories.user import UserRepository
-from src.schemas.post import PostCreate, Post
+from src.schemas.post import PostCreate, Post, PostUpdate
 from src.schemas.user import User
 from src.database.dependencies import get_db
 from src.lib.auth import ALGORITHM, SECRET_KEY
@@ -81,6 +81,20 @@ def get_posts(skip: int = 0, limit: int = 10, post_repository: PostRepository = 
 	posts = post_repository.get_posts(skip=skip, limit=limit)
 	
 	return posts
+
+
+@router.put('/{post_id}', response_model=Post)
+def update_post(post_id: int, post_update: PostUpdate, current_user: User = Depends(get_current_user), repository: PostRepository = Depends(get_post_repository)):
+	"""Atualiza um post existente. Apenas o dono pode atualizar"""
+	db_post = repository.get_post_by_id(post_id)
+	
+	if db_post is None:
+		raise HTTPException(status_code=404, detail='Post not found')
+	
+	if db_post.owner_id != current_user.id:
+		raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='You are not authorized to update this post')
+	
+	return repository.update_post(post_update, post_id)
 
 
 @router.delete('/post_id', status_code=status.HTTP_204_NO_CONTENT)
