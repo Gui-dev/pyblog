@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.schemas.post import PostCreate
+from src.schemas.post import PostCreate, PostUpdate
 from ..database.database import Post
 
 
@@ -26,9 +26,22 @@ class PostRepository:
 		self.db.commit()
 		self.db.refresh(db_post)
 		return db_post
+	
+	
+	def update_post(self, post_update: PostUpdate, post_id: int):
+		db_post = self.db.query(Post).filter(Post.id == post_id).first()
+		
+		if db_post:
+			db_post.title = post_update.title
+			db_post.content = post_update.content
+			self.db.commit()
+			self.db.refresh(db_post)
+		
+		return db_post
+		
 
 
-	def delete_post(dself, post_id: int):
+	def delete_post(self, post_id: int):
 		"""Deleta um post pelo ID e retorna o post deletado"""
 		db_post = self.db.query(Post).filter(Post.id == post_id).first()
 		
