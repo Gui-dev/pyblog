@@ -8,6 +8,8 @@ __pycache__/
 # C extensions
 *.so
 
+src/tests/*.db
+
 # Distribution / packaging
 .Python
 build/
@@ -108,3 +110,4 @@ venv.bak/
 .idea/*
 
 .DS_Store
+*.db
