@@ -24,6 +24,15 @@ def test_should_be_able_to_get_user_by_id(client):
 	assert response.status_code == 200
 	assert response.json()['email'] == user_data['email']
 	
+
+def test_should_be_able_to_return_404_user_not_found(client):
+	"""should be able to return 404 if user not found"""
+	
+	user_not_exists = 9999
+	
+	response = client.get(f'/users/{user_not_exists}')
+	assert response.status_code == 404
+	
 	
 	
 	

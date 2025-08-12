@@ -8,7 +8,7 @@ __pycache__/
 # C extensions
 *.so
 
-src/tests/*.db
+./src/tests/test.db
 
 # Distribution / packaging
 .Python
