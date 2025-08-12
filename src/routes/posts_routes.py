@@ -76,9 +76,14 @@ def get_post(post_id: int, post_repository: PostRepository = Depends(get_post_re
 
 
 @router.get('/', response_model=List[Post])
-def get_posts(skip: int = 0, limit: int = 10, post_repository: PostRepository = Depends(get_post_repository)):
+def get_posts(
+	skip: int = 0,
+	limit: int = 10,
+	search: str = None,
+	post_repository: PostRepository = Depends(get_post_repository)
+):
 	"""Retorna todos os posts do blog"""
-	posts = post_repository.get_posts(skip=skip, limit=limit)
+	posts = post_repository.get_posts(skip=skip, limit=limit, search=search)
 	
 	return posts
 

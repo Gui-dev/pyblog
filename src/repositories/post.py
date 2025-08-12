@@ -14,9 +14,17 @@ class PostRepository:
 		return self.db.query(Post).filter(Post.id == post_id).first()
 
 
-	def get_posts(self, skip: int = 0, limit: int = 10):
+	def get_posts(self, skip: int = 0, limit: int = 10, search: str = None):
 		"""Retorna uma lista de posts com paginação"""
-		return self.db.query(Post).offset(skip).limit(limit).all()
+		query = self.db.query(Post)
+		
+		if search:
+			query = query.filter(
+				(Post.title.ilike(f'%{search}%')) |
+				(Post.content.ilike(f'%{search}%'))
+			)
+		
+		return query.offset(skip).limit(limit).all()
 
 
 	def create_post(self, post: PostCreate, user_id: int):

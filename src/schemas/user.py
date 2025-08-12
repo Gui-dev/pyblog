@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import List, Optional
 
 from .post import Post
@@ -17,5 +17,4 @@ class User(UserBase):
 	is_active: bool
 	posts: List[Post] = []
 	
-	class Config:
-		from_attributes = True
+	model_config = ConfigDict(from_attributes=True)
