@@ -9,7 +9,23 @@ def test_create_user(client):
 	assert response.status_code == 201
 	assert response.json()['email'] == user_data['email']
 	assert 'id' in response.json()
+
+
+def test_should_be_able_to_get_all_users(client):
+	"""should be able to return all users"""
+	user_data = {
+		'email': 'test_all_users@email.com',
+		'password': '123456',
+	}
+	client.post('/users', json=user_data)
 	
+	response = client.get('/users')
+	
+	assert response.status_code == 200
+	assert isinstance(response.json(), list)
+	assert len(response.json()) > 0
+    
+
 
 def test_should_be_able_to_get_user_by_id(client):
 	"""should be able to get user by id"""
