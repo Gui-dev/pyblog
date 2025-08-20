@@ -52,3 +52,30 @@ def test_should_be_able_to_create_a_new_post(client):
 	assert response.status_code == 201
 	assert response.json()['title'] == post_data['title']
 	
+	
+def test_should_be_able_to_update_a_post(client):
+	"""should be able to update a post by ID"""
+	token = get_auth_token(client)
+	post_data = {
+		'title': 'Meu titulo de teste de update ID',
+		'content': 'Meu conteudo de teste update ID'
+	}
+	headers = { 'Authorization': f'Bearer {token}' }
+	create_response = client.post('/posts', json=post_data, headers=headers)
+	post_id = create_response.json()['id']
+	
+	update_data = {
+		'title': 'Meu titulo atualizado',
+		'content': 'Meu conteudo atualizado'
+	}
+	
+	response = client.put(f'/posts/{post_id}', json=update_data, headers=headers)
+	
+	assert response.status_code == 200
+	assert response.json()['title'] == update_data['title']
+	
+	
+	
+	
+	
+	
