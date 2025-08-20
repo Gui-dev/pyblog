@@ -74,8 +74,25 @@ def test_should_be_able_to_update_a_post(client):
 	assert response.status_code == 200
 	assert response.json()['title'] == update_data['title']
 	
+
+def test_should_be_able_to_delete_a_post_by_id(client):
+	"""should be able to delete a post by ID"""
+	token = get_auth_token(client)
+	post_data = {
+		'title': 'Meu titulo de teste de delete by ID',
+		'content': 'Meu conteudo de teste delete by ID'
+	}
+	headers = { 'Authorization': f'Bearer {token}' }
+	create_response = client.post('/posts', json=post_data, headers=headers)
+	post_id = create_response.json()['id']
 	
+	response = client.delete(f'/posts/{post_id}', headers=headers)
 	
+	assert response.status_code == 204
+	
+	get_response = client.get(f'/posts/{post_id}')
+	
+	assert get_response.status_code == 404
 	
 	
 	

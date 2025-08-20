@@ -102,7 +102,7 @@ def update_post(post_id: int, post_update: PostUpdate, current_user: User = Depe
 	return repository.update_post(post_update, post_id)
 
 
-@router.delete('/post_id', status_code=status.HTTP_204_NO_CONTENT)
+@router.delete('/{post_id}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_post(
 	post_id: int,
 	current_user: User = Depends(get_current_user),
